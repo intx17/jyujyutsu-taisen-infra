@@ -10,7 +10,11 @@ export class S3Stack extends cdk.Stack {
         const bucketName: string = `${config.get<string>('systemName')}-bucket`;
         const bucket = new s3.Bucket(this, 'S3Bucket', {
             bucketName: `${config.get<string>('systemName')}-bucket`,
-            accessControl: BucketAccessControl.PRIVATE
+            accessControl: BucketAccessControl.PRIVATE,
+            lifecycleRules: [{
+                prefix: 'positives.json',
+                expiration: cdk.Duration.days(7),
+            }]
         });
 
         cdk.Tags.of(bucket).add('NAME', bucketName);
