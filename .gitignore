@@ -3,6 +3,7 @@
 !webpack.config.js
 *.d.ts
 node_modules
+dest
 
 # CDK asset staging directory
 .cdk.staging
