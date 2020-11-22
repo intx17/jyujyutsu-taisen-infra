@@ -15,7 +15,7 @@ export const handler = async(event: any, contenxt: any, callback: (err: Error | 
             statusCode: 200,
             body: JSON.stringify({
                 result: 'SUCCEEDED',
-                positiives: {
+                positives: {
                     prefecture: parsedEvent.prefecture,
                     latestPositives: positivesOfPref
                 }
