@@ -11,16 +11,27 @@ export const handler = async(event: any, contenxt: any, callback: (err: Error | 
         const positives = await logic.getPositives();
         const positivesOfPref = logic.findPositivesOfPrefecture(parsedEvent, positives);
 
-        const ret = {
-            prefecture: parsedEvent.prefecture,
-            latestPositives: positivesOfPref
+        const response = {
+            statusCode: 200,
+            body: JSON.stringify({
+                result: 'SUCCEEDED',
+                positiives: {
+                    prefecture: parsedEvent.prefecture,
+                    latestPositives: positivesOfPref
+                }
+            }),
         }
-          console.log(JSON.stringify({
-            message: 'return value',
-            ret
-        }));
-        callback(null, ret);
+        callback(null, response);
     } catch (e) {
-        return callback(e);
+        const response = {
+            statusCode: 500,
+            body: JSON.stringify({
+                result: 'FAILED',
+                error: {
+                    reason: e.message
+                },
+            }),
+        }
+        return callback(null, response);
     }
 }

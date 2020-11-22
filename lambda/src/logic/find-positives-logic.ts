@@ -1,4 +1,3 @@
-import config from 'config';
 import { S3 } from "aws-sdk";
 import { ParsedPositives } from '../domain/positives';
 
@@ -16,19 +15,23 @@ export class FindPositivesLogic {
 
         const data = await s3Client.getObject(getRequest).promise();
         if (!data.Body) {
-            throw new Error('json body get from s3 does not exist.')
+            throw new Error('json body got from s3 does not exist.')
         }
         return JSON.parse(data.Body.toString());
     }
 
     findPositivesOfPrefecture(parsedEvent: ParsedFindPositivesEvent, positives: ParsedPositives): number {
-        return positives.data47[parsedEvent.prefecture];
+        const latestPositivesNumber = positives.data47[parsedEvent.prefecture];
+        if (!latestPositivesNumber) {
+            throw new Error('data of requested prefecture does not exist.');
+        }
+        return latestPositivesNumber;
     }
     
     parseFindPositivesEvent (event: any): ParsedFindPositivesEvent {
-        const prefecture: string | undefined = event?.prefecture
+        const prefecture: string | undefined = event?.queryStringParameters?.prefecture
         if (!prefecture) {
-            throw new Error('prefecture prop is missing or blank.');
+            throw new Error('prefecture parameter is missing or blank.');
         }
 
         return {

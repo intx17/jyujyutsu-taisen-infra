@@ -10,7 +10,21 @@ export const handler = async (event: any, context: any, callback: (err: Error | 
             json
         }));
         await logic.uploadPositives(json);
+
+        const response = {
+            statusCode: 200,
+            body: JSON.stringify({
+                result: 'SUCCEEDED',
+            }),
+        }
+        callback(null, response)
     } catch (e) {
-        return callback(e);
+         const response = {
+            statusCode: 500,
+            body: JSON.stringify({
+                result: 'FAILED',
+            }),
+        }
+        return callback(null, response);
     }
 }
