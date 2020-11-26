@@ -12,4 +12,4 @@ cdk.out
 # Parcel default cache directory
 .parcel-cache
 
-lambda/src/.secrets.json
+lambda/src/secrets.json
