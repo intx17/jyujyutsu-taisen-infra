@@ -3,6 +3,8 @@ const path = require('path');
 module.exports = {
     entry: {
         'analyze-text': `${__dirname}/lambda/src/index-analyze-text.ts`,
+        'get-search-result-text': `${__dirname}/lambda/src/index-get-search-result-text.ts`,
+        'get-trends': `${__dirname}/lambda/src/index-get-trends.ts`,
         'find-positives': `${__dirname}/lambda/src/index-find-positives.ts`,
         'update-positives': `${__dirname}/lambda/src/index-update-positives.ts`,
     },

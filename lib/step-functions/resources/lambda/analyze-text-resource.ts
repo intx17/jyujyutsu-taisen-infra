@@ -31,7 +31,7 @@ export function getAnalyzeTextFunction (scope: cdk.Construct): lambda.Function {
     });
 
     const functionName =  `${config.get<string>('systemName')}-ANALYZE-TEXT`;
-    const lambdaFunction = new lambda.Function(scope, 'FindPositivesFunction', {
+    const lambdaFunction = new lambda.Function(scope, 'AnalyzeTextFunction', {
         functionName,
         description: 'analyze text',
         code: lambda.Code.fromAsset(path.join(__dirname, '../../../../dest/pack/src/analyze-text')),

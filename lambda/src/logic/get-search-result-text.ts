@@ -7,6 +7,9 @@ interface ParsedSearchTweetsEvent {
     count: number
 }
 
+interface GetSearchResultTextResult {
+    text: string
+}
 export class GetSearchResultTextLogic {
     private twitterClient: Twitter;
 
@@ -32,7 +35,7 @@ export class GetSearchResultTextLogic {
         }
     }
 
-    async getSearchResultText(parsedEvent: ParsedSearchTweetsEvent): Promise<void> {
+    async getSearchResultText(parsedEvent: ParsedSearchTweetsEvent): Promise<GetSearchResultTextResult> {
         const requestParams = {
             q: parsedEvent.q,
             count: parsedEvent.count
@@ -43,8 +46,14 @@ export class GetSearchResultTextLogic {
                 if (err) {
                     reject(err);
                 }
-                console.log(data);
-                resolve();
+                const statuses = data.statuses;
+                const text = statuses.reduce((combined: string, status: any) => {
+                    combined += String(status.text);
+                    return combined;
+                }, '');
+                resolve({
+                    text
+                });
             })
         })
     }

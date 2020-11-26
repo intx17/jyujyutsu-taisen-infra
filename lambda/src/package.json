@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "scripts": {
     "debug-get-search-result-text": "ts-node exec/local/get-search-result-text-local-exec.ts",
-    "debug-get-trend-info": "ts-node exec/local/get-trend-info-local-exec.ts",
+    "debug-get-trends": "ts-node exec/local/get-trends-local-exec.ts",
     "debug-get-timeline-text": "ts-node exec/local/get-timeline-text-local-exec.ts",
     "debug-find-positives": "ts-node exec/local/find-positives-local-exec.ts",
     "debug-update-positives": "ts-node exec/local/update-positives-local-exec.ts"

@@ -1,13 +1,16 @@
-import { info } from 'console';
 import Twitter from 'twitter';
 import secrets from '../secrets.json';
 
-interface TrendInfo {
-    name: string
-    tweetVolume: number
+interface GetTrendsResult {
+    trends: Trend[]
 }
 
-export class GetTrendInfoLogic {
+interface Trend {
+    name: string
+    // tweetVolume: number
+}
+
+export class GetTrendsogic {
     private twitterClient: Twitter;
 
     constructor () {
@@ -19,7 +22,7 @@ export class GetTrendInfoLogic {
         })
     }
 
-    async getTrendInfo(): Promise<TrendInfo[]> {
+    async getTrends(): Promise<GetTrendsResult> {
         const requestParams = {
             id: 1,
         }
@@ -29,14 +32,16 @@ export class GetTrendInfoLogic {
                 if (err) {
                     reject(err);
                 }
-                const trends = data[0].trends;
-                const infos = trends.map((trend: any) => {
+                const sourceTrends = data[0].trends;
+                const trends = sourceTrends.map((trend: any) => {
                     return {
                         name: trend.name,
-                        tweetVolume: trend.tweet_volume ?? 0
+                        // tweetVolume: trend.tweet_volume ?? 0
                     }
                 });
-                resolve(infos);
+                resolve({
+                    trends
+                });
             })
         })
     }
