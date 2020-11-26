@@ -2,12 +2,15 @@
   "name": "my-doomsday-clock-infra-lambda",
   "version": "1.0.0",
   "scripts": {
+    "debug-get-timeline-text": "ts-node exec/local/get-timeline-text-local-exec.ts",
     "debug-find-positives": "ts-node exec/local/find-positives-local-exec.ts",
     "debug-update-positives": "ts-node exec/local/update-positives-local-exec.ts"
   },
   "dependencies": {
+    "@types/twitter": "^1.7.0",
     "aws-sdk": "^2.797.0",
-    "node-fetch": "^2.6.1"
+    "node-fetch": "^2.6.1",
+    "twitter": "^1.7.1"
   },
   "devDependencies": {
     "@types/node-fetch": "^2.5.7",
