@@ -5,7 +5,7 @@ interface ParsedGetTimelineTextEvent {
     screenName: string
 }
 
-export class GetTimelineTextLoginc {
+export class GetTimelineTextLogic {
     private twitterClient: Twitter;
 
     constructor () {
@@ -42,7 +42,6 @@ export class GetTimelineTextLoginc {
                     combined += tweet.text;
                     return combined;
                 }, '');
-                console.log(text);
                 resolve(text);
             })
         })

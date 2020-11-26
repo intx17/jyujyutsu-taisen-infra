@@ -1,14 +1,9 @@
-import { GetTimelineTextLogic } from './logic/get-timeline-text';
+import { GetTrendInfoLogic } from './logic/get-trend-info';
 
 export const handler = async(event: any, contenxt: any, callback: (err: Error | null, result?: object) => void): Promise<void> => {
-    const logic = new GetTimelineTextLogic();
+    const logic = new GetTrendInfoLogic();
     try {
-        const parsedEvent = logic.parseGetTimelineTextEvent(event);
-        console.log(JSON.stringify({
-            message: 'event was parsed',
-            parsedEvent
-        }));
-        const data = await logic.getTimelineText(parsedEvent);
+        const data = await logic.getTrendInfo();
 
         const response = {
             statusCode: 200,
