@@ -1,8 +1,8 @@
 import config from 'config';
 import * as cdk from '@aws-cdk/core';
 import * as apiGateway from '@aws-cdk/aws-apigateway';
-import { getFindPositivesFunction } from './resource/find-positives-resource';
-import { getUpdatePositivesFunction } from './resource/update-positives-resource';
+import { getFindPositivesFunction } from './resources/find-positives-resource';
+import { getUpdatePositivesFunction } from './resources/update-positives-resource';
 import { MethodLoggingLevel } from '@aws-cdk/aws-apigateway';
 
 export class ApiGatewayStack extends cdk.Stack {
