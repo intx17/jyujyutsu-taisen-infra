@@ -17,7 +17,7 @@ export class GetTimelineTextLogic {
         })
     }
 
-     parseGetTimelineTextEvent (event: any): ParsedGetTimelineTextEvent {
+    parseGetTimelineTextEvent (event: any): ParsedGetTimelineTextEvent {
         const screenName: string | undefined = event?.screenName
         if (!screenName) {
             throw new Error('screenName does not exists or is blank.');
