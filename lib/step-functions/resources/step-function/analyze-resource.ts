@@ -12,7 +12,7 @@ interface IDependencyResouce {
 }
 
 export function getAnalyzeStepFunction(scope: cdk.Construct, dependencyResource: IDependencyResouce): stepfunctions.StateMachine {
-     const role = new iam.Role(scope, 'AddPharmacyRole', {
+     const role = new iam.Role(scope, 'AnalyzeRole', {
         roleName: `${config.get('systemName')}-ANALYZE`,
         assumedBy: new iam.ServicePrincipal(`states.${cdk.Aws.REGION}.amazonaws.com`),
         managedPolicies: [
@@ -20,17 +20,26 @@ export function getAnalyzeStepFunction(scope: cdk.Construct, dependencyResource:
         ]
     });
 
+    const fail = new stepfunctions.Fail(scope, 'Fail', {
+        comment: 'statemachine fail',
+    });
+
+    const success = new stepfunctions.Succeed(scope, 'Success', {
+        comment: 'statemachine success',
+    });
+
     const getTrendsTask = getGetTrendsFunctionTask(scope, dependencyResource.getTrendsFunction);
-    const searchAndAnalyzeMap = getSearchAndAnalyzeMap(scope, dependencyResource.getSearchResultTextFunction, dependencyResource.analyzeTextFunction);
+    const searchAndAnalyzeMap = getSearchAndAnalyzeMap(scope, dependencyResource.getSearchResultTextFunction, dependencyResource.analyzeTextFunction, fail);
 
     const analyzeStateMachine = new stepfunctions.StateMachine(scope, 'AnalyzeStateMachine', {
         stateMachineName: `${config.get<string>('systemName')}-ANALYZE`,
         definition:
             getTrendsTask
-            .next(searchAndAnalyzeMap),
+            .next(searchAndAnalyzeMap)
+            .next(success),
         role: role
     });
-    cdk.Tags.of(analyzeStateMachine).add('NAME', analyzeStateMachine.stateMachineName);
+    cdk.Tags.of(analyzeStateMachine).add('NAME', 'ANALYZE');
     return analyzeStateMachine;
 }
 
@@ -40,35 +49,44 @@ function getGetTrendsFunctionTask(scope: cdk.Construct, getTrendsFunction: lambd
         comment: `invoke ${getTrendsFunction.functionName}`,
         inputPath: '$',
         resultPath: '$.getTrendsTaskResult',
-        outputPath: '$'
+        outputPath: '$',
+        payloadResponseOnly: true,
     });
 
     return task;
 }
 
-function getSearchAndAnalyzeMap(scope: cdk.Construct, getSearchResultTextFunction: lambda.Function, analyzeTextFunction: lambda.Function): stepfunctions.Map {
-    const searchResultTask: stepfunctions.TaskStateBase = new tasks.LambdaInvoke(scope, 'GetSearchResultText', {
+function getSearchAndAnalyzeMap(scope: cdk.Construct, getSearchResultTextFunction: lambda.Function, analyzeTextFunction: lambda.Function, fail: stepfunctions.Fail): stepfunctions.Map {
+    const getSearchResultTextTask: stepfunctions.TaskStateBase = new tasks.LambdaInvoke(scope, 'GetSearchResultText', {
         lambdaFunction: getSearchResultTextFunction,
         comment: `invoke ${getSearchResultTextFunction.functionName}`,
         inputPath: '$',
         resultPath: '$.getSearchResultTextResult',
-        outputPath: '$'
+        outputPath: '$',
+        payloadResponseOnly: true,
     });
 
     const analyzeTextTask: stepfunctions.TaskStateBase = new tasks.LambdaInvoke(scope, 'AnalyzeTextTask', {
         lambdaFunction: analyzeTextFunction,
         comment: `invoke ${analyzeTextFunction.functionName}`,
-        inputPath: '$',
-        resultPath: '$.getSearchResultTextResult',
-        outputPath: '$'
+        inputPath: '$.getSearchResultTextResult',
+        resultPath: '$.analyzeTextResult',
+        outputPath: '$',
+        payloadResponseOnly: true,
     });
 
     const map: stepfunctions.Map = new stepfunctions.Map(scope, 'SearchAndAnalyzeMap', {
         inputPath: '$.getTrendsTaskResult',
         itemsPath: '$.trends',
     }).iterator(
-        searchResultTask
+        getSearchResultTextTask
         .next(analyzeTextTask)
     )
+
+    map.addCatch(fail, {
+        errors: [stepfunctions.Errors.ALL],
+        resultPath: '$.error-info'
+    })
+
     return map;
 }

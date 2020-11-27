@@ -7,10 +7,13 @@ import { getAnalyzeStepFunction } from './resources/step-function/analyze-resour
 export class StepFunctionsStack extends cdk.Stack {
     constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
         super(scope, id, props);
+        const analyzeTextFunction = getAnalyzeTextFunction(this);
+        const getSearchResultTextFunction = getGetSearchResultTextFunction(this);
+        const getTrendsFunction = getGetTrendsFunction(this);
         getAnalyzeStepFunction(this, {
-            analyzeTextFunction: getAnalyzeTextFunction(this),
-            getSearchResultTextFunction: getGetSearchResultTextFunction(this),
-            getTrendsFunction: getGetTrendsFunction(this)
+            analyzeTextFunction,
+            getSearchResultTextFunction,
+            getTrendsFunction,
         });
     }
 }

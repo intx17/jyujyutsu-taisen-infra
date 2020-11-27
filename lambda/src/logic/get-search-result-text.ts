@@ -26,7 +26,7 @@ export class GetSearchResultTextLogic {
         const q: string | undefined = event?.q
         const count: number | undefined = event?.count
         if (!q || !count) {
-            throw new Error('parameter is invalid.');
+            throw new Error(`parameter is invalid. ${JSON.stringify(event)}`);
         }
 
         return {

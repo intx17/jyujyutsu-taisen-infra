@@ -6,8 +6,8 @@ interface GetTrendsResult {
 }
 
 interface Trend {
-    name: string
-    // tweetVolume: number
+    q: string,
+    count: number
 }
 
 export class GetTrendsogic {
@@ -35,8 +35,8 @@ export class GetTrendsogic {
                 const sourceTrends = data[0].trends;
                 const trends = sourceTrends.map((trend: any) => {
                     return {
-                        name: trend.name,
-                        // tweetVolume: trend.tweet_volume ?? 0
+                        q: trend.name,
+                        count: 10
                     }
                 });
                 resolve({

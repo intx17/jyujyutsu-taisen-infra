@@ -7,24 +7,18 @@ export const handler = async(event: any, contenxt: any, callback: (err: Error | 
 
         const data = await logic.getSearchResultText(parsedEvent);
 
-        const response = {
-            statusCode: 200,
-            body: JSON.stringify({
-                result: 'SUCCEEDED',
-                data
-            }),
-        }
-        callback(null, response);
+        console.log(JSON.stringify({
+            result: 'SUCCEEDED',
+            data
+        }),)
+        callback(null, data);
     } catch (e) {
-        const response = {
-            statusCode: 500,
-            body: JSON.stringify({
-                result: 'FAILED',
-                error: {
-                    reason: e.message
-                },
-            }),
-        }
-        return callback(e, response);
+        console.log(JSON.stringify({
+            result: 'FAILED',
+            error: {
+                reason: e.message
+            },
+        }))
+        return callback(e, {});
     }
 }
