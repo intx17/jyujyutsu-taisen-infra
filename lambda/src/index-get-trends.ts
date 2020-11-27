@@ -3,7 +3,8 @@ import { GetTrendsogic } from './logic/get-trends';
 export const handler = async(event: any, contenxt: any, callback: (err: Error | null, result?: object) => void): Promise<void> => {
     const logic = new GetTrendsogic();
     try {
-        const data = await logic.getTrends();
+        const parsedEvent = logic.parseGetTimelineTextEvent(event);
+        const data = await logic.getTrends(parsedEvent);
 
         console.log(JSON.stringify({
             result: 'SUCCEEDED',

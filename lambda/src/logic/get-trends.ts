@@ -1,6 +1,10 @@
 import Twitter from 'twitter';
 import secrets from '../secrets.json';
+import { JapaneseWoeid, JapaneseWoeidUtil } from '../domain/japanese-woeid';
 
+interface ParsedGetTrendsEvent {
+    woeid: JapaneseWoeid,
+}
 interface GetTrendsResult {
     trends: Trend[]
 }
@@ -22,9 +26,20 @@ export class GetTrendsogic {
         })
     }
 
-    async getTrends(): Promise<GetTrendsResult> {
+    parseGetTimelineTextEvent (event: any): ParsedGetTrendsEvent {
+        const woeid: number | undefined = event?.woeid
+        if (!woeid) {
+            throw new Error(`parameter is invalid. ${JSON.stringify(event)}`);
+        }
+
+        return {
+            woeid
+        }
+    }
+
+    async getTrends(parsedEvent: ParsedGetTrendsEvent): Promise<GetTrendsResult> {
         const requestParams = {
-            id: 1,
+            id: parsedEvent.woeid,
         }
 
         return new Promise((resolve, reject) => {
@@ -36,7 +51,7 @@ export class GetTrendsogic {
                 const trends = sourceTrends.map((trend: any) => {
                     return {
                         q: trend.name,
-                        count: 10
+                        count: 5
                     }
                 });
                 resolve({
