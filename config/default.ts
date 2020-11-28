@@ -1,3 +1,3 @@
 export = {
-    systemName: 'my-doomsday-clock'
+    systemName: 'jyujyutsu-taisen'
 }

@@ -1,8 +1,8 @@
 {
-  "name": "my-doomsday-clock-infra",
+  "name": "jyujyutsu-taisen-infra",
   "version": "0.1.0",
   "bin": {
-    "my-doomsday-clock-infra": "bin/my-doomsday-clock-infra.js"
+    "jyujyutsu-taisen-infra": "bin/jyujyutsu-taisen-infra.js"
   },
   "scripts": {
     "build": "tsc",

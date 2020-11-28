@@ -1,5 +1,5 @@
 {
-  "name": "my-doomsday-clock-infra-lambda",
+  "name": "jyujyutsu-taisen-infra-lambda",
   "version": "1.0.0",
   "scripts": {
     "debug-analyze-text": "ts-node exec/local/analyze-text-local-exec.ts",
