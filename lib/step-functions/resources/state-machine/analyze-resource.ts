@@ -15,7 +15,7 @@ interface IDependencyResouce {
     getTrendsFunction: lambda.Function,
 }
 
-export function getAnalyzeStepFunction(scope: cdk.Construct, dependencyResource: IDependencyResouce): stepfunctions.StateMachine {
+export function getAnalyzeStateMachine(scope: cdk.Construct, dependencyResource: IDependencyResouce): stepfunctions.StateMachine {
      const role = new iam.Role(scope, 'AnalyzeRole', {
         roleName: `${config.get('systemName')}-ANALYZE`,
         assumedBy: new iam.ServicePrincipal(`states.${cdk.Aws.REGION}.amazonaws.com`),
@@ -24,15 +24,15 @@ export function getAnalyzeStepFunction(scope: cdk.Construct, dependencyResource:
         ]
     });
 
-    const fail = new stepfunctions.Fail(scope, 'Fail', {
+    const fail = new stepfunctions.Fail(scope, 'AnalyzeFail', {
         comment: 'statemachine fail',
     });
 
-    const success = new stepfunctions.Succeed(scope, 'Success', {
+    const success = new stepfunctions.Succeed(scope, 'AnalyzeSuccess', {
         comment: 'statemachine success',
     });
 
-    const getTrendsTask = getGetTrendsFunctionTask(scope, dependencyResource.getTrendsFunction);
+    const getTrendsTask = getGetTrendsFunctionTask(scope, dependencyResource.getTrendsFunction, fail);
     const searchAndAnalyzeMap = getSearchAndAnalyzeMap(scope, dependencyResource.getSearchResultTextFunction, dependencyResource.analyzeTextFunction, fail);
 
     const analyzeStateMachine = new stepfunctions.StateMachine(scope, 'AnalyzeStateMachine', {
@@ -50,8 +50,8 @@ export function getAnalyzeStepFunction(scope: cdk.Construct, dependencyResource:
         description: 'Start Analyze',
         ruleName: `${config.get<string>('systemName')}-START-ANALYZE`,
         schedule:  Schedule.cron({
-            minute: '0',
-            hour: '15',
+            minute: '30',
+            hour: '23',
         }),
     });
     rule.addTarget(new targets.SfnStateMachine(analyzeStateMachine, {
@@ -63,7 +63,7 @@ export function getAnalyzeStepFunction(scope: cdk.Construct, dependencyResource:
     return analyzeStateMachine;
 }
 
-function getGetTrendsFunctionTask(scope: cdk.Construct, getTrendsFunction: lambda.Function): stepfunctions.TaskStateBase {
+function getGetTrendsFunctionTask(scope: cdk.Construct, getTrendsFunction: lambda.Function, fail: stepfunctions.Fail): stepfunctions.TaskStateBase {
     const task: stepfunctions.TaskStateBase = new tasks.LambdaInvoke(scope, 'GetTrendsTask', {
         lambdaFunction: getTrendsFunction,
         comment: `invoke ${getTrendsFunction.functionName}`,
@@ -72,6 +72,11 @@ function getGetTrendsFunctionTask(scope: cdk.Construct, getTrendsFunction: lambd
         outputPath: '$',
         payloadResponseOnly: true,
     });
+
+    task.addCatch(fail, {
+        errors: [stepfunctions.Errors.ALL],
+        resultPath: '$.error-info'
+    })
 
     return task;
 }

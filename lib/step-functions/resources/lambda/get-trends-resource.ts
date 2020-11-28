@@ -22,7 +22,7 @@ export function getGetTrendsFunction (scope: cdk.Construct): lambda.Function {
         runtime: lambda.Runtime.NODEJS_12_X,
         handler: 'index.handler',
         role,
-        timeout: cdk.Duration.seconds(10),
+        timeout: cdk.Duration.seconds(30),
         environment: {
             ACCOUNT_ID: cdk.Aws.ACCOUNT_ID,
             TZ: 'Asia/Tokyo',

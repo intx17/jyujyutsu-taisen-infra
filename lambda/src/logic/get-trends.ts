@@ -1,10 +1,11 @@
 import Twitter from 'twitter';
 import secrets from '../secrets.json';
-import { JapaneseWoeid, JapaneseWoeidUtil } from '../domain/japanese-woeid';
+import { JapaneseWoeid } from '../domain/japanese-woeid';
 
 interface ParsedGetTrendsEvent {
     woeid: JapaneseWoeid,
 }
+
 interface GetTrendsResult {
     trends: Trend[]
 }
@@ -29,7 +30,7 @@ export class GetTrendsogic {
     parseGetTimelineTextEvent (event: any): ParsedGetTrendsEvent {
         const woeid: number | undefined = event?.woeid
         if (!woeid) {
-            throw new Error(`parameter is invalid. ${JSON.stringify(event)}`);
+            throw new Error(`event is invalid. ${JSON.stringify(event)}`);
         }
 
         return {

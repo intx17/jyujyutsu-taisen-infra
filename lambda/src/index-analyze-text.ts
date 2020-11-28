@@ -4,10 +4,6 @@ export const handler = async(event: any, contenxt: any, callback: (err: Error | 
     const logic = new AnalyzeTextLogic();
     try {
         const parsedEvent = logic.parseAnalyzeSentimentEvent(event);
-        console.log(JSON.stringify({
-            message: 'event was parsed',
-            parsedEvent
-        }));
         const data = await logic.analyzeSentiment(parsedEvent);
 
         console.log(JSON.stringify({

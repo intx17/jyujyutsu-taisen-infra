@@ -38,7 +38,7 @@ export function getAnalyzeTextFunction (scope: cdk.Construct): lambda.Function {
         runtime: lambda.Runtime.NODEJS_12_X,
         handler: 'index.handler',
         role,
-        timeout: cdk.Duration.seconds(10),
+        timeout: cdk.Duration.minutes(1),
         environment: {
             ACCOUNT_ID: cdk.Aws.ACCOUNT_ID,
             TZ: 'Asia/Tokyo',

@@ -10,6 +10,7 @@ interface ParsedSearchTweetsEvent {
 interface GetSearchResultTextResult {
     text: string
 }
+
 export class GetSearchResultTextLogic {
     private twitterClient: Twitter;
 
@@ -26,7 +27,7 @@ export class GetSearchResultTextLogic {
         const q: string | undefined = event?.q
         const count: number | undefined = event?.count
         if (!q || !count) {
-            throw new Error(`parameter is invalid. ${JSON.stringify(event)}`);
+            throw new Error(`event is invalid. ${JSON.stringify(event)}`);
         }
 
         return {

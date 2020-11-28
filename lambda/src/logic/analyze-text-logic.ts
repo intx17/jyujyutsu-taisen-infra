@@ -18,7 +18,7 @@ export class AnalyzeTextLogic {
     parseAnalyzeSentimentEvent (event: any): ParsedAnalyzeSentimentEvent {
         const text: string | undefined = event?.text
         if (!text) {
-            throw new Error(`text does not exists or is blank. ${JSON.stringify(event)}`);
+            throw new Error(`event is invalid. ${JSON.stringify(event)}`);
         }
 
         return {

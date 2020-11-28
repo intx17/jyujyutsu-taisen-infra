@@ -5,9 +5,9 @@ import * as iam from '@aws-cdk/aws-iam';
 import * as lambda from '@aws-cdk/aws-lambda';
 import * as logs from '@aws-cdk/aws-logs'
 
-export function getFindPositivesFunction (scope: cdk.Construct): lambda.Function {
-    const role: iam.Role = new iam.Role(scope, 'FindPositivesFnRole', {
-        roleName: `${config.get<string>('systemName')}-FIND-POSITIVES-FN`,
+export function getPutInfectedDataFunction (scope: cdk.Construct): lambda.Function {
+    const role: iam.Role = new iam.Role(scope, 'PutInfectedDataFnRole', {
+        roleName: `${config.get<string>('systemName')}-PUT-INFECTED-DATA-FN`,
         assumedBy: new iam.ServicePrincipal('lambda.amazonaws.com'),
         managedPolicies: [
             iam.ManagedPolicy.fromAwsManagedPolicyName('service-role/AWSLambdaBasicExecutionRole'),
@@ -18,35 +18,27 @@ export function getFindPositivesFunction (scope: cdk.Construct): lambda.Function
                      new iam.PolicyStatement({
                         effect: iam.Effect.ALLOW,
                         actions: [
-                            's3:ListBucket',
+                            'dynamodb:ListTables',
+                            'dynamodb:PutItem',
                         ],
                         resources: [
-                            `${cdk.Fn.importValue(`${config.get<string>('systemName')}-S3Bucket-BucketArn`)}`
-                        ],
-                    }),
-                    new iam.PolicyStatement({
-                        effect: iam.Effect.ALLOW,
-                        actions: [
-                            's3:GetObject',
-                        ],
-                        resources: [
-                            `${cdk.Fn.importValue(`${config.get<string>('systemName')}-S3Bucket-BucketArn`)}/\*`
+                            `arn:aws:dynamodb:ap-northeast-1:${cdk.Aws.ACCOUNT_ID}:table/${config.get<string>('dynamodb.infectedDataTable.tableName')}`
                         ],
                     }),
                 ]
             })
         }
-    })
+    });
 
-    const functionName =  `${config.get<string>('systemName')}-FIND-POSITIVES`;
-    const lambdaFunction = new lambda.Function(scope, 'FindPositivesFunction', {
+    const functionName =  `${config.get<string>('systemName')}-PUT-INFECTED-DATA`;
+    const lambdaFunction = new lambda.Function(scope, 'PutInfectedDataFunction', {
         functionName,
-        description: 'find positives',
-        code: lambda.Code.fromAsset(path.join(__dirname, '../../../dest/pack/src/find-positives')),
+        description: 'Put infected data',
+        code: lambda.Code.fromAsset(path.join(__dirname, '../../../../dest/pack/src/put-infected-data')),
         runtime: lambda.Runtime.NODEJS_12_X,
         handler: 'index.handler',
         role,
-        timeout: cdk.Duration.seconds(10),
+        timeout: cdk.Duration.seconds(30),
         environment: {
             ACCOUNT_ID: cdk.Aws.ACCOUNT_ID,
             TZ: 'Asia/Tokyo',
@@ -55,7 +47,7 @@ export function getFindPositivesFunction (scope: cdk.Construct): lambda.Function
     cdk.Tags.of(lambdaFunction).add('NAME', functionName);
 
      // Add Log
-    new logs.CfnLogGroup(scope, 'FindPositivesFnLogGroup', {
+    new logs.CfnLogGroup(scope, 'PutInfectedDataFnLogGroup', {
         logGroupName: `/aws/lambda/${lambdaFunction.functionName}`,
         retentionInDays: 1
     });

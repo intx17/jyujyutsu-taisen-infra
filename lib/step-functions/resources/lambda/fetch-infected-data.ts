@@ -5,24 +5,24 @@ import * as iam from '@aws-cdk/aws-iam';
 import * as lambda from '@aws-cdk/aws-lambda';
 import * as logs from '@aws-cdk/aws-logs'
 
-export function getGetSearchResultTextFunction (scope: cdk.Construct): lambda.Function {
-    const role: iam.Role = new iam.Role(scope, 'GetSearchResultTextFnRole', {
-        roleName: `${config.get<string>('systemName')}-GET-SEARCH-RESULT-TEXT-FN`,
+export function getFetchInfectedDataFunction (scope: cdk.Construct): lambda.Function {
+    const role: iam.Role = new iam.Role(scope, 'FetchInfectedDataFnRole', {
+        roleName: `${config.get<string>('systemName')}-FETCH-INFECTED-DATA-FN`,
         assumedBy: new iam.ServicePrincipal('lambda.amazonaws.com'),
         managedPolicies: [
             iam.ManagedPolicy.fromAwsManagedPolicyName('service-role/AWSLambdaBasicExecutionRole'),
-        ]
+        ],
     });
 
-    const functionName =  `${config.get<string>('systemName')}-GET-SEARCH-RESULT-TEXT`;
-    const lambdaFunction = new lambda.Function(scope, 'GetSearchResultTextFunction', {
+    const functionName =  `${config.get<string>('systemName')}-FETCH-INFECTED-DATA`;
+    const lambdaFunction = new lambda.Function(scope, 'FetchInfectedDataFunction', {
         functionName,
-        description: 'analyze text',
-        code: lambda.Code.fromAsset(path.join(__dirname, '../../../../dest/pack/src/get-search-result-text')),
+        description: 'Fetch infected data',
+        code: lambda.Code.fromAsset(path.join(__dirname, '../../../../dest/pack/src/fetch-infected-data')),
         runtime: lambda.Runtime.NODEJS_12_X,
         handler: 'index.handler',
         role,
-        timeout: cdk.Duration.seconds(30),
+        timeout: cdk.Duration.seconds(10),
         environment: {
             ACCOUNT_ID: cdk.Aws.ACCOUNT_ID,
             TZ: 'Asia/Tokyo',
@@ -31,7 +31,7 @@ export function getGetSearchResultTextFunction (scope: cdk.Construct): lambda.Fu
     cdk.Tags.of(lambdaFunction).add('NAME', functionName);
 
      // Add Log
-    new logs.CfnLogGroup(scope, 'GetSearchResultTextFnLogGroup', {
+    new logs.CfnLogGroup(scope, 'FetchInfectedDataFnLogGroup', {
         logGroupName: `/aws/lambda/${lambdaFunction.functionName}`,
         retentionInDays: 1
     });
