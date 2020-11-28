@@ -22,19 +22,23 @@ export interface OriginalInfectedDataOfPrefecture {
 }
 
 export interface ParsedInfectedData {
+    sumInfectedNumber: number,
     data47: {[key: string]: number}
 }
 
 export const parse = (original: OriginalInfectedData
    ): ParsedInfectedData => {
-    const parsedData47 = original.data47.reduce((p, d) => {
+    let sumInfectedNumber: number = 0;
+    let parsedData47 = {};
+    for (const d of original.data47) {
         const prefectureName: string = d.name;
         const infectedNumber: number = d.data[d.data.length - 1];
-        const parsed = Object.assign(p, {[prefectureName]: infectedNumber})
-        return parsed;
-    }, {})
+        Object.assign(parsedData47, {[prefectureName]: infectedNumber})
+        sumInfectedNumber += infectedNumber;
+    }
 
     return {
+        sumInfectedNumber,
         data47: parsedData47
     }
 }
