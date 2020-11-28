@@ -1,9 +1,9 @@
 import config from 'config';
 import * as cdk from '@aws-cdk/core';
 import * as apiGateway from '@aws-cdk/aws-apigateway';
+import { MethodLoggingLevel } from '@aws-cdk/aws-apigateway';
 import { getFindPositivesFunction } from './resources/find-positives-resource';
 import { getUpdatePositivesFunction } from './resources/update-positives-resource';
-import { MethodLoggingLevel } from '@aws-cdk/aws-apigateway';
 
 export class ApiGatewayStack extends cdk.Stack {
     constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
@@ -21,13 +21,11 @@ export class ApiGatewayStack extends cdk.Stack {
             },
         });
         cdk.Tags.of(restApi).add('NAME', restApiName);
-        const findPositivesIntegration = new apiGateway.LambdaIntegration(findPositivesFunction, {});
-        const updatePositivesIntegration = new apiGateway.LambdaIntegration(updatePositivesFunction, {});
-
         const v1 = restApi.root.addResource('v1');
         const positives = v1.addResource('positives');
-
-        positives.addMethod('GET', findPositivesIntegration, {});
+        const findPositivesIntegration = new apiGateway.LambdaIntegration(findPositivesFunction, {});
+        const updatePositivesIntegration = new apiGateway.LambdaIntegration(updatePositivesFunction, {});
+        positives.addMethod('GET', findPositivesIntegration);
         positives.addMethod('POST', updatePositivesIntegration);
     }
 }

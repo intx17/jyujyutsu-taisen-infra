@@ -4,6 +4,10 @@ import * as iam from '@aws-cdk/aws-iam';
 import * as stepfunctions from '@aws-cdk/aws-stepfunctions';
 import * as tasks from '@aws-cdk/aws-stepfunctions-tasks';
 import * as lambda from '@aws-cdk/aws-lambda';
+import * as events from '@aws-cdk/aws-events'
+import { Schedule } from '@aws-cdk/aws-events';
+import * as targets from '@aws-cdk/aws-events-targets';
+import { JapaneseWoeid } from '../../../../lambda/src/domain/japanese-woeid';
 
 interface IDependencyResouce {
     analyzeTextFunction: lambda.Function,
@@ -40,6 +44,22 @@ export function getAnalyzeStepFunction(scope: cdk.Construct, dependencyResource:
         role: role
     });
     cdk.Tags.of(analyzeStateMachine).add('NAME', 'ANALYZE');
+
+    // event bridge
+    const rule = new events.Rule(scope, 'StartAnalyzeRule', {
+        description: 'Start Analyze',
+        ruleName: `${config.get<string>('systemName')}-START-ANALYZE`,
+        schedule:  Schedule.cron({
+            minute: '0',
+            hour: '15',
+        }),
+    });
+    rule.addTarget(new targets.SfnStateMachine(analyzeStateMachine, {
+        input: events.RuleTargetInput.fromObject({
+            woeid: JapaneseWoeid.Japan
+        })
+    }));
+
     return analyzeStateMachine;
 }
 

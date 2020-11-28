@@ -27,6 +27,7 @@
   "dependencies": {
     "@aws-cdk/aws-apigateway": "^1.75.0",
     "@aws-cdk/aws-events": "^1.75.0",
+    "@aws-cdk/aws-events-targets": "^1.75.0",
     "@aws-cdk/aws-lambda": "^1.75.0",
     "@aws-cdk/aws-s3": "^1.75.0",
     "@aws-cdk/aws-stepfunctions": "^1.75.0",

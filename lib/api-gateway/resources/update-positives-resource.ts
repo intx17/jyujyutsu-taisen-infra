@@ -4,6 +4,9 @@ import * as cdk from "@aws-cdk/core";
 import * as iam from '@aws-cdk/aws-iam';
 import * as lambda from '@aws-cdk/aws-lambda';
 import * as logs from '@aws-cdk/aws-logs'
+import * as events from '@aws-cdk/aws-events'
+import { Schedule } from '@aws-cdk/aws-events';
+import * as targets from '@aws-cdk/aws-events-targets';
 
 export function getUpdatePositivesFunction (scope: cdk.Construct): lambda.Function {
     const role: iam.Role = new iam.Role(scope, 'UpdatePositivesFnRole', {
@@ -59,6 +62,17 @@ export function getUpdatePositivesFunction (scope: cdk.Construct): lambda.Functi
         logGroupName: `/aws/lambda/${lambdaFunction.functionName}`,
         retentionInDays: 1
     });
+
+    // rules
+    const rule = new events.Rule(scope, 'StartUpdatePositiveRule', {
+        description: 'Start Updating Positive',
+        ruleName: `${config.get<string>('systemName')}-START-UPDATE-POSITIVE`,
+        schedule:  Schedule.cron({
+            minute: '0',
+            hour: '15',
+        }),
+    });
+    rule.addTarget(new targets.LambdaFunction(lambdaFunction));
 
     return lambdaFunction;
 }
