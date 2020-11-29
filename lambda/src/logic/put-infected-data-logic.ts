@@ -21,7 +21,7 @@ export class PutInfectedDataLogic {
     async putInfectedData (parsedEvent: ParsedPutInfectedDataEvent) {
         const dynamoDb = new DynamoDB.DocumentClient();
         const input: DynamoDB.DocumentClient.PutItemInput = {
-            TableName: 'InfectedData-vlhflinlizerjhy2f3rwh7gste-dev',
+            TableName: 'InfectedData-k4wzejb44nfnncje7zbcjewbyq-dev',
             Item: {
                 id: uuidv4(),
                 content: parsedEvent.content,
