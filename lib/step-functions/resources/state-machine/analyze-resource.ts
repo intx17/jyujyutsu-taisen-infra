@@ -51,7 +51,7 @@ export function getAnalyzeStateMachine(scope: cdk.Construct, dependencyResource:
         ruleName: `${config.get<string>('systemName')}-START-ANALYZE`,
         schedule:  Schedule.cron({
             minute: '30',
-            hour: '23',
+            hour: '14',
         }),
     });
     rule.addTarget(new targets.SfnStateMachine(analyzeStateMachine, {

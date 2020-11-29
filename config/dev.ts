@@ -2,7 +2,7 @@ export = {
     env: 'dev',
     dynamodb: {
         infectedDataTable: {
-            tableName: 'InfectedData-ji7w2lbt5rb7nnquftdlxtkwiq-dev'
+            tableName: 'InfectedData-vlhflinlizerjhy2f3rwh7gste-dev'
         }
     }
 }

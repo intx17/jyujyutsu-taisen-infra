@@ -49,7 +49,7 @@ export function getUpdateInfectedDataStateMachine(scope: cdk.Construct, dependen
         ruleName: `${config.get<string>('systemName')}-START-UPDATE-INFECTED-DATA`,
         schedule:  Schedule.cron({
             minute: '30',
-            hour: '23',
+            hour: '14',
         }),
     });
     rule.addTarget(new targets.SfnStateMachine(updateInfectedDataStateMachine));
