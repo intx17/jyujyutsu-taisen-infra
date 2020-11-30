@@ -3,7 +3,7 @@ import { getAnalyzeTextFunction } from './resources/lambda/analyze-text-resource
 import { getGetSearchResultTextFunction } from './resources/lambda/get-search-result-text-resource';
 import { getGetTrendsFunction } from './resources/lambda/get-trends-resource';
 import { getFetchInfectedDataFunction } from './resources/lambda/fetch-infected-data';
-import { getPutInfectedDataFunction } from './resources/lambda/put-infected-data';
+import { getUpdateInfectedDataItemFunction } from './resources/lambda/update-infected-data-item';
 import { getAnalyzeStateMachine } from './resources/state-machine/analyze-resource';
 import { getUpdateInfectedDataStateMachine } from './resources/state-machine/update-infected-data-resource';
 
@@ -22,11 +22,11 @@ export class StepFunctionsStack extends cdk.Stack {
         });
 
         const fetchInfectedDataFunction = getFetchInfectedDataFunction(this);
-        const putInfectedDataFunction = getPutInfectedDataFunction(this);
+        const updateInfectedDataItemFunction = getUpdateInfectedDataItemFunction(this);
 
         getUpdateInfectedDataStateMachine(this, {
             fetchInfectedDataFunction,
-            putInfectedDataFunction
+            updateInfectedDataItemFunction
         });
     }
 }

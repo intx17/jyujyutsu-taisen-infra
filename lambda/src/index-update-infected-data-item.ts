@@ -1,10 +1,10 @@
-import { PutInfectedDataLogic } from './logic/put-infected-data-logic';
+import { UpdateInfectedDataItemLogic } from './logic/update-infected-data-item-logic';
 
 export const handler = async (event: any, context: any, callback: (err: Error | null, result?: object) => void): Promise<void> => {
-    const logic = new PutInfectedDataLogic();
+    const logic = new UpdateInfectedDataItemLogic();
     try {
-        const parsedEvent = logic.parsePutInfectedDataEvent(event);
-        await logic.putInfectedData(parsedEvent);
+        const parsedEvent = logic.parseUpdateInfectedDataItemEvent(event);
+        await logic.updateInfectedDataItem(parsedEvent);
 
         console.log(JSON.stringify({
             result: 'SUCCEEDED'

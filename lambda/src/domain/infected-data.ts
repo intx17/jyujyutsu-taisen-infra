@@ -26,8 +26,7 @@ export interface ParsedInfectedData {
     data47: {[key: string]: number}
 }
 
-export const parse = (original: OriginalInfectedData
-   ): ParsedInfectedData => {
+export const parse = (original: OriginalInfectedData): ParsedInfectedData => {
     let sumInfectedNumber: number = 0;
     let parsedData47 = {};
     for (const d of original.data47) {

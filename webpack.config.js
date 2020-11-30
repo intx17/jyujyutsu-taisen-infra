@@ -6,7 +6,7 @@ module.exports = {
         'fetch-infected-data': `${__dirname}/lambda/src/index-fetch-infected-data.ts`,
         'get-search-result-text': `${__dirname}/lambda/src/index-get-search-result-text.ts`,
         'get-trends': `${__dirname}/lambda/src/index-get-trends.ts`,
-        'put-infected-data': `${__dirname}/lambda/src/index-put-infected-data.ts`,
+        'update-infected-data-item': `${__dirname}/lambda/src/index-update-infected-data-item.ts`,
     },
     output: {
         path: `${__dirname}/dest/pack`,

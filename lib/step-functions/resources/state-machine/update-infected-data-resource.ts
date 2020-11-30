@@ -10,7 +10,7 @@ import * as targets from '@aws-cdk/aws-events-targets';
 
 interface IDependencyResouce {
     fetchInfectedDataFunction: lambda.Function,
-    putInfectedDataFunction: lambda.Function,
+    updateInfectedDataItemFunction: lambda.Function,
 }
 
 export function getUpdateInfectedDataStateMachine(scope: cdk.Construct, dependencyResource: IDependencyResouce): stepfunctions.StateMachine {
@@ -31,13 +31,13 @@ export function getUpdateInfectedDataStateMachine(scope: cdk.Construct, dependen
     });
 
     const fetchInfectedDataTask = getFetchInfectedDataFunctionTask(scope, dependencyResource.fetchInfectedDataFunction, fail);
-    const putInfectedDataTask = getPutInfectedDataFunctionTask(scope, dependencyResource.putInfectedDataFunction, fail);
+    const updateInfectedDataItemTask = getUpdateInfectedDataItemFunctionTask(scope, dependencyResource.updateInfectedDataItemFunction, fail);
 
     const updateInfectedDataStateMachine = new stepfunctions.StateMachine(scope, 'UpdateInfectedDataStateMachine', {
         stateMachineName: `${config.get<string>('systemName')}-UPDATE-INFECTED-DATA`,
         definition:
         fetchInfectedDataTask
-            .next(putInfectedDataTask)
+            .next(updateInfectedDataItemTask)
             .next(success),
         role: role
     });
@@ -48,8 +48,7 @@ export function getUpdateInfectedDataStateMachine(scope: cdk.Construct, dependen
         description: 'Start Update Infected Data',
         ruleName: `${config.get<string>('systemName')}-START-UPDATE-INFECTED-DATA`,
         schedule:  Schedule.cron({
-            minute: '30',
-            hour: '14',
+            minute: '0',
         }),
     });
     rule.addTarget(new targets.SfnStateMachine(updateInfectedDataStateMachine));
@@ -75,12 +74,12 @@ function getFetchInfectedDataFunctionTask(scope: cdk.Construct, fetchInfectedDat
     return task;
 }
 
-function getPutInfectedDataFunctionTask(scope: cdk.Construct, putInfectedDataFunction: lambda.Function, fail: stepfunctions.Fail): stepfunctions.TaskStateBase {
-    const task: stepfunctions.TaskStateBase = new tasks.LambdaInvoke(scope, 'PutInfectedDataTask', {
-        lambdaFunction: putInfectedDataFunction,
-        comment: `invoke ${putInfectedDataFunction.functionName}`,
+function getUpdateInfectedDataItemFunctionTask(scope: cdk.Construct, updateInfectedDataItemFunction: lambda.Function, fail: stepfunctions.Fail): stepfunctions.TaskStateBase {
+    const task: stepfunctions.TaskStateBase = new tasks.LambdaInvoke(scope, 'UpdateInfectedDataItemTask', {
+        lambdaFunction: updateInfectedDataItemFunction,
+        comment: `invoke ${updateInfectedDataItemFunction.functionName}`,
         inputPath: '$.fetchInfectedDataResult',
-        resultPath: '$.putInfectedDataResult',
+        resultPath: '$.updateInfectedDataItemResult',
         outputPath: '$',
         payloadResponseOnly: true,
     });
