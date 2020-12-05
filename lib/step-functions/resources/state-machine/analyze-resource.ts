@@ -11,7 +11,7 @@ import { JapaneseWoeid } from '../../../../lambda/src/domain/japanese-woeid';
 
 interface IDependencyResouce {
     analyzeTextFunction: lambda.Function,
-    getSearchResultTextFunction: lambda.Function,
+    getSearchResultFunction: lambda.Function,
     getTrendsFunction: lambda.Function,
 }
 
@@ -33,7 +33,7 @@ export function getAnalyzeStateMachine(scope: cdk.Construct, dependencyResource:
     });
 
     const getTrendsTask = getGetTrendsFunctionTask(scope, dependencyResource.getTrendsFunction, fail);
-    const searchAndAnalyzeMap = getSearchAndAnalyzeMap(scope, dependencyResource.getSearchResultTextFunction, dependencyResource.analyzeTextFunction, fail);
+    const searchAndAnalyzeMap = getSearchAndAnalyzeMap(scope, dependencyResource.getSearchResultFunction, dependencyResource.analyzeTextFunction, fail);
 
     const analyzeStateMachine = new stepfunctions.StateMachine(scope, 'AnalyzeStateMachine', {
         stateMachineName: `${config.get<string>('systemName')}-ANALYZE`,
@@ -81,12 +81,12 @@ function getGetTrendsFunctionTask(scope: cdk.Construct, getTrendsFunction: lambd
     return task;
 }
 
-function getSearchAndAnalyzeMap(scope: cdk.Construct, getSearchResultTextFunction: lambda.Function, analyzeTextFunction: lambda.Function, fail: stepfunctions.Fail): stepfunctions.Map {
-    const getSearchResultTextTask: stepfunctions.TaskStateBase = new tasks.LambdaInvoke(scope, 'GetSearchResultText', {
-        lambdaFunction: getSearchResultTextFunction,
-        comment: `invoke ${getSearchResultTextFunction.functionName}`,
+function getSearchAndAnalyzeMap(scope: cdk.Construct, getSearchResultFunction: lambda.Function, analyzeTextFunction: lambda.Function, fail: stepfunctions.Fail): stepfunctions.Map {
+    const getSearchResultTask: stepfunctions.TaskStateBase = new tasks.LambdaInvoke(scope, 'GetSearchResult', {
+        lambdaFunction: getSearchResultFunction,
+        comment: `invoke ${getSearchResultFunction.functionName}`,
         inputPath: '$',
-        resultPath: '$.getSearchResultTextResult',
+        resultPath: '$.getSearchResultResult',
         outputPath: '$',
         payloadResponseOnly: true,
     });
@@ -94,7 +94,7 @@ function getSearchAndAnalyzeMap(scope: cdk.Construct, getSearchResultTextFunctio
     const analyzeTextTask: stepfunctions.TaskStateBase = new tasks.LambdaInvoke(scope, 'AnalyzeTextTask', {
         lambdaFunction: analyzeTextFunction,
         comment: `invoke ${analyzeTextFunction.functionName}`,
-        inputPath: '$.getSearchResultTextResult',
+        inputPath: '$.getSearchResultResult',
         resultPath: '$.analyzeTextResult',
         outputPath: '$',
         payloadResponseOnly: true,
@@ -104,7 +104,7 @@ function getSearchAndAnalyzeMap(scope: cdk.Construct, getSearchResultTextFunctio
         inputPath: '$.getTrendsTaskResult',
         itemsPath: '$.trends',
     }).iterator(
-        getSearchResultTextTask
+        getSearchResultTask
         .next(analyzeTextTask)
     )
 

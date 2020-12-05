@@ -1,6 +1,6 @@
 import * as cdk from '@aws-cdk/core';
 import { getAnalyzeTextFunction } from './resources/lambda/analyze-text-resource';
-import { getGetSearchResultTextFunction } from './resources/lambda/get-search-result-text-resource';
+import { getGetSearchResultFunction } from './resources/lambda/get-search-result-resource';
 import { getGetTrendsFunction } from './resources/lambda/get-trends-resource';
 import { getFetchInfectedDataFunction } from './resources/lambda/fetch-infected-data';
 import { getUpdateInfectedDataItemFunction } from './resources/lambda/update-infected-data-item';
@@ -12,12 +12,12 @@ export class StepFunctionsStack extends cdk.Stack {
         super(scope, id, props);
 
         const analyzeTextFunction = getAnalyzeTextFunction(this);
-        const getSearchResultTextFunction = getGetSearchResultTextFunction(this);
+        const getSearchResultFunction = getGetSearchResultFunction(this);
         const getTrendsFunction = getGetTrendsFunction(this);
 
         getAnalyzeStateMachine(this, {
             analyzeTextFunction,
-            getSearchResultTextFunction,
+            getSearchResultFunction,
             getTrendsFunction,
         });
 

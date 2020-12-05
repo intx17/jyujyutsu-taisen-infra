@@ -3,15 +3,16 @@ import Twitter from 'twitter';
 import secrets from '../secrets.json';
 
 interface ParsedSearchTweetsEvent {
-    q: string,
+    q: string
     count: number
 }
 
-interface GetSearchResultTextResult {
+interface GetSearchResultResult {
     text: string
+    count: number
 }
 
-export class GetSearchResultTextLogic {
+export class GetSearchResultLogic {
     private twitterClient: Twitter;
 
     constructor () {
@@ -36,7 +37,7 @@ export class GetSearchResultTextLogic {
         }
     }
 
-    async getSearchResultText(parsedEvent: ParsedSearchTweetsEvent): Promise<GetSearchResultTextResult> {
+    async getSearchResult(parsedEvent: ParsedSearchTweetsEvent): Promise<GetSearchResultResult> {
         const requestParams = {
             q: parsedEvent.q,
             count: parsedEvent.count
@@ -53,7 +54,8 @@ export class GetSearchResultTextLogic {
                     return combined;
                 }, '');
                 resolve({
-                    text
+                    text,
+                    count: parsedEvent.count
                 });
             })
         })

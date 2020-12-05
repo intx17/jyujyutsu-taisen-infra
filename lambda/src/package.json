@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "scripts": {
     "debug-analyze-text": "ts-node exec/local/analyze-text-local-exec.ts",
-    "debug-get-search-result-text": "ts-node exec/local/get-search-result-text-local-exec.ts",
+    "debug-get-search-result": "ts-node exec/local/get-search-result-local-exec.ts",
     "debug-get-trends": "ts-node exec/local/get-trends-local-exec.ts",
     "debug-fetch-infected-data": "ts-node exec/local/fetch-infected-data-local-exec.ts",
     "debug-update-infected-data-item": "ts-node exec/local/update-infected-data-item-local-exec.ts"

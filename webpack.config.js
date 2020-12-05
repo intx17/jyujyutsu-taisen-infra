@@ -4,7 +4,7 @@ module.exports = {
     entry: {
         'analyze-text': `${__dirname}/lambda/src/index-analyze-text.ts`,
         'fetch-infected-data': `${__dirname}/lambda/src/index-fetch-infected-data.ts`,
-        'get-search-result-text': `${__dirname}/lambda/src/index-get-search-result-text.ts`,
+        'get-search-result': `${__dirname}/lambda/src/index-get-search-result.ts`,
         'get-trends': `${__dirname}/lambda/src/index-get-trends.ts`,
         'update-infected-data-item': `${__dirname}/lambda/src/index-update-infected-data-item.ts`,
     },
