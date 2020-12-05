@@ -18,7 +18,7 @@ export function getFetchInfectedDataFunction (scope: cdk.Construct): lambda.Func
     const lambdaFunction = new lambda.Function(scope, 'FetchInfectedDataFunction', {
         functionName,
         description: 'Fetch infected data',
-        code: lambda.Code.fromAsset(path.join(__dirname, '../../../../dest/pack/src/fetch-infected-data')),
+        code: lambda.Code.fromAsset(path.join(__dirname, '../../../../dist/pack/src/fetch-infected-data')),
         runtime: lambda.Runtime.NODEJS_12_X,
         handler: 'index.handler',
         role,

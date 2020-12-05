@@ -18,13 +18,13 @@
     "experimentalDecorators": true,
     "strictPropertyInitialization": false,
     "typeRoots": ["./node_modules/@types"],
-    "outDir": "./dest",
+    "outDir": "./dist",
     "esModuleInterop": true,
     "resolveJsonModule": true,
     "moduleResolution": "node"
   },
   "exclude": [
-    "dest",
+    "dist",
     "cdk.out"
   ]
 }

@@ -18,7 +18,7 @@ export function getGetSearchResultTextFunction (scope: cdk.Construct): lambda.Fu
     const lambdaFunction = new lambda.Function(scope, 'GetSearchResultTextFunction', {
         functionName,
         description: 'analyze text',
-        code: lambda.Code.fromAsset(path.join(__dirname, '../../../../dest/pack/src/get-search-result-text')),
+        code: lambda.Code.fromAsset(path.join(__dirname, '../../../../dist/pack/src/get-search-result-text')),
         runtime: lambda.Runtime.NODEJS_12_X,
         handler: 'index.handler',
         role,

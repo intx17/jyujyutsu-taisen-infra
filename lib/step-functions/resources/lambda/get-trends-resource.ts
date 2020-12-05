@@ -18,7 +18,7 @@ export function getGetTrendsFunction (scope: cdk.Construct): lambda.Function {
     const lambdaFunction = new lambda.Function(scope, 'GetTrendsFunction', {
         functionName,
         description: 'analyze text',
-        code: lambda.Code.fromAsset(path.join(__dirname, '../../../../dest/pack/src/get-trends')),
+        code: lambda.Code.fromAsset(path.join(__dirname, '../../../../dist/pack/src/get-trends')),
         runtime: lambda.Runtime.NODEJS_12_X,
         handler: 'index.handler',
         role,

@@ -5,7 +5,7 @@
     "strict": true,
     "esModuleInterop": true,
     "sourceMap": true,
-    "outDir": "./dest",
+    "outDir": "./dist",
     "resolveJsonModule": true,
     "moduleResolution": "node"
   }

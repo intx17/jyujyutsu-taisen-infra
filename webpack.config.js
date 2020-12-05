@@ -9,7 +9,7 @@ module.exports = {
         'update-infected-data-item': `${__dirname}/lambda/src/index-update-infected-data-item.ts`,
     },
     output: {
-        path: `${__dirname}/dest/pack`,
+        path: `${__dirname}/dist/pack`,
         filename: 'src/[name]/index.js',
         libraryTarget: 'commonjs2',
     },

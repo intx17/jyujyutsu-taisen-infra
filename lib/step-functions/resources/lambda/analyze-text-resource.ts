@@ -34,7 +34,7 @@ export function getAnalyzeTextFunction (scope: cdk.Construct): lambda.Function {
     const lambdaFunction = new lambda.Function(scope, 'AnalyzeTextFunction', {
         functionName,
         description: 'analyze text',
-        code: lambda.Code.fromAsset(path.join(__dirname, '../../../../dest/pack/src/analyze-text')),
+        code: lambda.Code.fromAsset(path.join(__dirname, '../../../../dist/pack/src/analyze-text')),
         runtime: lambda.Runtime.NODEJS_12_X,
         handler: 'index.handler',
         role,

@@ -35,7 +35,7 @@ export function getUpdateInfectedDataItemFunction (scope: cdk.Construct): lambda
     const lambdaFunction = new lambda.Function(scope, 'UpdateInfectedDataItemFunction', {
         functionName,
         description: 'Update infected data',
-        code: lambda.Code.fromAsset(path.join(__dirname, '../../../../dest/pack/src/update-infected-data-item')),
+        code: lambda.Code.fromAsset(path.join(__dirname, '../../../../dist/pack/src/update-infected-data-item')),
         runtime: lambda.Runtime.NODEJS_12_X,
         handler: 'index.handler',
         role,
