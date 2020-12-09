@@ -13,6 +13,7 @@ interface IDependencyResouce {
     analyzeTextFunction: lambda.Function,
     getSearchResultFunction: lambda.Function,
     getTrendsFunction: lambda.Function,
+    batchWriteBattleFunction: lambda.Function,
 }
 
 export function getAnalyzeStateMachine(scope: cdk.Construct, dependencyResource: IDependencyResouce): stepfunctions.StateMachine {
@@ -34,12 +35,14 @@ export function getAnalyzeStateMachine(scope: cdk.Construct, dependencyResource:
 
     const getTrendsTask = getGetTrendsFunctionTask(scope, dependencyResource.getTrendsFunction, fail);
     const searchAndAnalyzeMap = getSearchAndAnalyzeMap(scope, dependencyResource.getSearchResultFunction, dependencyResource.analyzeTextFunction, fail);
+    const batchWriteBattleTask = getBatchWriteBattleFunctionTask(scope, dependencyResource.batchWriteBattleFunction, fail);
 
     const analyzeStateMachine = new stepfunctions.StateMachine(scope, 'AnalyzeStateMachine', {
         stateMachineName: `${config.get<string>('systemName')}-ANALYZE`,
         definition:
             getTrendsTask
             .next(searchAndAnalyzeMap)
+            .next(batchWriteBattleTask)
             .next(success),
         role: role
     });
@@ -103,6 +106,8 @@ function getSearchAndAnalyzeMap(scope: cdk.Construct, getSearchResultFunction: l
     const map: stepfunctions.Map = new stepfunctions.Map(scope, 'SearchAndAnalyzeMap', {
         inputPath: '$.getTrendsTaskResult',
         itemsPath: '$.trends',
+        resultPath: '$.searchAndAnalyzeResult',
+        outputPath: '$',
     }).iterator(
         getSearchResultTask
         .next(analyzeTextTask)
@@ -114,4 +119,22 @@ function getSearchAndAnalyzeMap(scope: cdk.Construct, getSearchResultFunction: l
     })
 
     return map;
+}
+
+function getBatchWriteBattleFunctionTask(scope: cdk.Construct, batchWriteBattleFunction: lambda.Function, fail: stepfunctions.Fail): stepfunctions.TaskStateBase {
+    const task: stepfunctions.TaskStateBase = new tasks.LambdaInvoke(scope, 'BatchWriteBattleTask', {
+        lambdaFunction: batchWriteBattleFunction,
+        comment: `invoke ${batchWriteBattleFunction.functionName}`,
+        inputPath: '$.searchAndAnalyzeResult',
+        resultPath: '$.batchWriteBattleTaskResult',
+        outputPath: '$',
+        payloadResponseOnly: true,
+    });
+
+    task.addCatch(fail, {
+        errors: [stepfunctions.Errors.ALL],
+        resultPath: '$.error-info'
+    })
+
+    return task;
 }

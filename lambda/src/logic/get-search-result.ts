@@ -1,15 +1,12 @@
-import { info } from 'console';
 import Twitter from 'twitter';
 import secrets from '../secrets.json';
 
 interface ParsedSearchTweetsEvent {
     q: string
-    count: number
 }
 
 interface GetSearchResultResult {
     text: string
-    count: number
 }
 
 export class GetSearchResultLogic {
@@ -24,23 +21,21 @@ export class GetSearchResultLogic {
         })
     }
 
-    parseGetTimelineTextEvent (event: any): ParsedSearchTweetsEvent {
+    parseSearchTweetsEvent (event: any): ParsedSearchTweetsEvent {
         const q: string | undefined = event?.q
-        const count: number | undefined = event?.count
-        if (!q || !count) {
+        if (!q) {
             throw new Error(`event is invalid. ${JSON.stringify(event)}`);
         }
 
         return {
-            q,
-            count
+            q
         }
     }
 
     async getSearchResult(parsedEvent: ParsedSearchTweetsEvent): Promise<GetSearchResultResult> {
         const requestParams = {
             q: parsedEvent.q,
-            count: parsedEvent.count
+            count: 5
         }
 
         return new Promise((resolve, reject) => {
@@ -55,7 +50,6 @@ export class GetSearchResultLogic {
                 }, '');
                 resolve({
                     text,
-                    count: parsedEvent.count
                 });
             })
         })

@@ -4,6 +4,6 @@ import { JapaneseWoeid } from '../../domain/japanese-woeid';
 
 (async (): Promise<void> => {
     await handler({
-        woeid: JapaneseWoeid.Tokyo
+        woeid: JapaneseWoeid.Japan
     }, null, callbackMock);
 })();

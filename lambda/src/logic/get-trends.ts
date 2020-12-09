@@ -12,7 +12,8 @@ interface GetTrendsResult {
 
 interface Trend {
     q: string,
-    count: number
+    count: number,
+    tweetVolume: number
 }
 
 export class GetTrendsogic {
@@ -49,12 +50,14 @@ export class GetTrendsogic {
                     reject(err);
                 }
                 const sourceTrends = data[0].trends;
-                const trends = sourceTrends.map((trend: any) => {
-                    return {
-                        q: trend.name,
-                        count: 5
-                    }
-                });
+                const trends = sourceTrends
+                    .filter((trend: any) => !!trend.tweet_volume)
+                    .map((trend: any) => {
+                        return {
+                            q: trend.name,
+                            tweetVolume: trend.tweet_volume
+                        }
+                    })
                 resolve({
                     trends
                 });

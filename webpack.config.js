@@ -7,6 +7,7 @@ module.exports = {
         'get-search-result': `${__dirname}/lambda/src/index-get-search-result.ts`,
         'get-trends': `${__dirname}/lambda/src/index-get-trends.ts`,
         'update-infected-data-item': `${__dirname}/lambda/src/index-update-infected-data-item.ts`,
+        'batch-write-battle': `${__dirname}/lambda/src/index-batch-write-battle.ts`,
     },
     output: {
         path: `${__dirname}/dist/pack`,
