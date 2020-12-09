@@ -5,12 +5,6 @@ interface ParsedUpdateInfectedDataItemEvent {
     content: string,
 }
 
-interface InfectedDataItem {
-    id: string,
-    date?: string,
-    content?: string,
-}
-
 export class UpdateInfectedDataItemLogic {
     private client: DynamoDB.DocumentClient;
     private tableName: string;

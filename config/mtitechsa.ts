@@ -10,5 +10,8 @@ export = {
         curseTable: {
             tableName: 'Curse-jkmvijgwfjcwtkjx2z5dbeowqy-mtitechsa'
         },
+        playerTable: {
+            tableName: 'Player-jkmvijgwfjcwtkjx2z5dbeowqy-mtitechsa'
+        }
     }
 }

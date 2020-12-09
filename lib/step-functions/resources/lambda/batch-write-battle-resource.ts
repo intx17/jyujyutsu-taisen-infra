@@ -25,7 +25,8 @@ export function getBatchWriteBattleFunction (scope: cdk.Construct): lambda.Funct
                         ],
                         resources: [
                             `arn:aws:dynamodb:ap-northeast-1:${cdk.Aws.ACCOUNT_ID}:table/${config.get<string>('dynamodb.battleTable.tableName')}`,
-                            `arn:aws:dynamodb:ap-northeast-1:${cdk.Aws.ACCOUNT_ID}:table/${config.get<string>('dynamodb.curseTable.tableName')}`
+                            `arn:aws:dynamodb:ap-northeast-1:${cdk.Aws.ACCOUNT_ID}:table/${config.get<string>('dynamodb.curseTable.tableName')}`,
+                            `arn:aws:dynamodb:ap-northeast-1:${cdk.Aws.ACCOUNT_ID}:table/${config.get<string>('dynamodb.playerTable.tableName')}`,
                         ],
                     }),
                 ]
