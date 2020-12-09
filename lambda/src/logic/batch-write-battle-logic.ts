@@ -40,7 +40,7 @@ export class BatchWriteBattleLogic {
 
     constructor () {
         this.client = new DynamoDB.DocumentClient();
-        this.curseTableName = 'Curse';
+        this.curseTableName = 'Curse-jkmvijgwfjcwtkjx2z5dbeowqy-mtitechsa';
     }
 
     private parseBatchWriteBattleLogicEventChild  (child: any): ParsedBatchWriteBattleLogicEventChild {
@@ -140,7 +140,7 @@ export class BatchWriteBattleLogic {
 
         // テーブル名がキー
         const map: DynamoDB.DocumentClient.BatchWriteItemRequestMap = {
-            Battle: writeRequests
+            'Battle-jkmvijgwfjcwtkjx2z5dbeowqy-mtitechsa': writeRequests
         }
 
         const batchWriteInput: DynamoDB.BatchWriteItemInput = {

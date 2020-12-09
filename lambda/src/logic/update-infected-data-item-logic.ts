@@ -17,7 +17,7 @@ export class UpdateInfectedDataItemLogic {
 
     constructor () {
         this.client = new DynamoDB.DocumentClient();
-        this.tableName = 'InfectedData-kluhkmblrbejljkhxtul4ec6re-dev';
+        this.tableName = 'InfectedData-jkmvijgwfjcwtkjx2z5dbeowqy-mtitechsa';
     }
     parseUpdateInfectedDataItemEvent (event: any) {
         const content: string | undefined = event?.content
